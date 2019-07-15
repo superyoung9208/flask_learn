@@ -59,11 +59,23 @@ def forge():
     db.session.commit()
     click.echo('Done')
 
+@app.context_processor
+def inject_user():
+    """模板通用变量"""
+    user = User.query.first()
+    return dict(user=user)
+
+@app.errorhandler(404)
+def page_not_found(e): # e异常对象
+    """404页面"""
+    user = User.query.first()
+    return render_template("404.html"),404
+
 @app.route("/")
 def index():
     user = User.query.first()
     movies = Movie.query.all()
-    return render_template("index.html", user=user, movies=movies)
+    return render_template("index.html", movies=movies)
 
 
 @app.route("/user/<name>")
