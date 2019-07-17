@@ -94,6 +94,7 @@ def admin(username, password):
         user.password = password
     else:
         click.echo("create user")
+        user = User()
         user.name = username
         user.password = password
         db.session.add(user)
@@ -150,7 +151,7 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        if not username and password:
+        if not username or not password:
             flash("Invalid input")
             return redirect(url_for("login"))
         user = User.query.first()
@@ -181,6 +182,7 @@ def settings():
         username = request.form.get("name")
         if not username or len(username) > 20:
             flash("Invalid input")
+            return redirect(url_for('index'))
         current_user.name = username
         db.session.commit()
         flash("setting updated")
@@ -208,9 +210,10 @@ def update_movie(movie_id):
         return redirect(url_for("index"))
     elif request.method == "DELETE":
         movie = Movie.query.get_or_404(movie_id)
-        db.session.remove(movie)
+        db.session.delete(movie)
         db.session.commit()
-
+        flash("Item deleted.")
+        return redirect(url_for("index"))
 
 @app.route("/user/<name>")
 def user_page(name):

@@ -7,3 +7,5 @@ vvenv/
 __pycache__/
 .env
 *.db
+htmlcov/
+.coverage
