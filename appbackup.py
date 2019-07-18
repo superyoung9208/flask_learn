@@ -142,7 +142,7 @@ def index():
     movies = Movie.query.all()
     return render_template("index.html", movies=movies)
 
-
+# 未通过的路由保护的用户重定向到登录页面
 login_manager.login_view = 'login'
 
 
