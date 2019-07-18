@@ -3,8 +3,6 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 import sys, os
 
-
-
 WIN = sys.platform.startswith('win')
 if WIN:  # 如果是 Windows 系统，使用三个斜线
     prefix = 'sqlite:///'
@@ -12,7 +10,8 @@ else:  # 否则使用四个斜线
     prefix = 'sqlite:////'
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(os.path.dirname(app.root_path), 'data.db')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev')
+app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(os.path.dirname(app.root_path), os.getenv('DATABASE_FILE', 'data.db'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = 'dev'
@@ -38,4 +37,5 @@ def inject_user():
     user = User.query.first()
     return dict(user=user)
 
-from watchlist import views,commands,errors
+
+from watchlist import views, commands, errors
