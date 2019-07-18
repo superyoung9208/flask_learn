@@ -4,7 +4,9 @@ Author:laoyang
 """
 
 import unittest
-from app import app, db, User, Movie, forge, initdb, admin
+from watchlist import app, db
+from watchlist.commands import forge, initdb
+from watchlist.models import User, Movie
 
 
 class WatchlistTestCase(unittest.TestCase):
@@ -206,11 +208,12 @@ class WatchlistTestCase(unittest.TestCase):
     def test_admin_command_update(self):
         """测试更新admin命令"""
         result = self.ruuner.invoke(args=['admin', '--username', 'peter', '--password', '456'])
-        self.assertIn('updating user',result.output)
+        self.assertIn('updating user', result.output)
         self.assertIn('Done.', result.output)
         self.assertEqual(User.query.count(), 1)
         self.assertEqual(User.query.first().name, 'peter')
         self.assertTrue(User.query.first().check_password('456'))
+
 
 if __name__ == '__main__':
     unittest.main()
